@@ -96,7 +96,7 @@ export default function NaijaWatts() {
     const totalFuelCost = fuelLogs.reduce((a, f) => a + f.totalCost, 0);
     const totalLitres   = fuelLogs.reduce((a, f) => a + f.litres, 0);
     const estGenCost = genHours * settings.fuelConsumptionPerHour * settings.currentFuelPrice;
-    const totalDays = [...new Set(powerLogs.map(l => l.date))].length;
+    const totalDays = Array.from(new Set(powerLogs.map(l => l.date))).length;
     const avgNepaPerDay = totalDays > 0 ? nepaHours / totalDays : 0;
     return { nepaHours, genHours, totalFuelCost, totalLitres, estGenCost, avgNepaPerDay, totalDays };
   }, [powerLogs, fuelLogs, settings]);
@@ -113,7 +113,7 @@ export default function NaijaWatts() {
 
   // Weekly bar data (last 7 unique days)
   const weekDays = useMemo(() => {
-    const days = [...new Set(powerLogs.map(l => l.date))].sort().slice(-7);
+    const days = Array.from(new Set(powerLogs.map(l => l.date))).sort().slice(-7);
     return days.map(date => {
       const dayLogs = powerLogs.filter(l => l.date === date);
       return {
@@ -413,7 +413,7 @@ export default function NaijaWatts() {
                   <div className="flex items-center gap-2">
                     <input
                       type={field.type}
-                      value={(settings as Record<string, unknown>)[field.key] as string}
+                      value={(settings as unknown as Record<string, string>)[field.key]}
                       onChange={e => setSettings(s => ({ ...s, [field.key]: field.type === "number" ? parseFloat(e.target.value)||0 : e.target.value }))}
                       className="flex-1 bg-[#1d2535] border border-[#1d2535] rounded-xl px-4 py-3 text-[#f0f4ff] text-sm focus:outline-none focus:border-[#00e5a0]/50 transition-colors font-mono"
                     />
